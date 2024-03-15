@@ -88,7 +88,7 @@ This script processes instrument data from an input file using PySpark and appli
 
 ```bash
 python instrument_data_processor.py
-
+```
 
 ## Example
 
