@@ -1,4 +1,5 @@
-# Setting up Spark and Hadoop with PySpark - Installation Guide
+
+# 1. Setting up Spark and Hadoop with PySpark - Installation Guide
 
 This guide will walk you through the process of setting up Spark 3.0 and Hadoop on your system and integrating them with PySpark.
 
@@ -39,4 +40,52 @@ Considering PyCharm's convenience over Jupyter Notebook, integrate PyCharm with 
 Once these paths are added, you may be prompted to install 'py4j'. Click to complete the integration of PyCharm with PySpark.
 
 Now you're all set to work with PySpark seamlessly in your development environment!
-﻿# pyspark_test
+
+
+# 2. Setting up Spark and Hadoop with PySpark - Installation Guide
+# Instrument Data Processor
+
+This script processes instrument data from an input file using PySpark and applies price modifiers fetched from an SQLite database.
+
+## Setup Instructions
+
+1. **Prepare Input Data:**
+   - Ensure you have an input file named "instrument_data.txt" containing the instrument data.
+
+2. **Set up Database:**
+   - Make sure you have SQLite installed.
+   - Create a database file named "instrument_price_modifiers.db" in the same directory as the script.
+
+3. **Insert Sample Data:**
+   - Open the script in a Python environment.
+   - Run the script.
+   - Sample data will be automatically inserted into the database.
+
+4. **Execute the Script:**
+   - Ensure Spark and PySpark are installed and configured.
+   - Run the script.
+   - The script will process the input data using Spark, applying any price modifiers fetched from the database.
+
+5. **Review Output:**
+   - The script will print the processed instrument data, including the instrument name and its modified value.
+
+6. **Clean Up:**
+   - After execution, the script will automatically close the database connection.
+
+## Requirements
+
+- Python 3.x
+- PySpark
+- SQLite
+
+## Usage
+
+1. Clone the repository or download the script and required files.
+2. Follow the setup instructions mentioned above.
+3. Execute the script using a Python environment.
+
+## Example
+
+```bash
+python instrument_data_processor.py
+
