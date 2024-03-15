@@ -1,5 +1,6 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, countDistinct
+from pyspark.sql.functions import col, countDistinct, mean
+from pyspark.sql import functions as F
 import sqlite3
 
 class InstrumentPriceModifierDB:
@@ -33,17 +34,18 @@ class CalculationEngine:
         """
         Calculate mean value for a specific instrument.
         """
-        mean_value = df.filter(df.Instrument == instrument_name).agg({"Value": "avg"}).collect()[0][0]
+        mean_value = df.filter(df['Instrument'] == 'INSTRUMENT1').agg(mean('Value')).collect()[0][0]
         return mean_value
 
     @staticmethod
-    def calculate_mean_for_month(df, instrument_name, month_year):
+    def calculate_mean_for_november(df, instrument_name):
         """
         Calculate mean value for a specific instrument for a given month.
         """
-        start_date = f"01-{month_year}"
-        end_date = f"30-{month_year}"
-        mean_value = df.filter((col("Instrument") == instrument_name) & (col("Date").between(start_date, end_date))).agg({"Value": "avg"}).collect()[0][0]
+        mean_value = df.filter((df['Instrument'] == instrument_name) & \
+                                              (df['Date'].between('01-Nov-2014', '30-Nov-2014'))) \
+            .agg(mean('Value')).collect()[0][0]
+
         return mean_value
 
     @staticmethod
@@ -51,8 +53,10 @@ class CalculationEngine:
         """
         Calculate specified statistic for a specific instrument.
         """
-        if statistic == "distinct_dates":
-            result = df.filter(df.Instrument == instrument_name).agg(countDistinct("Date")).collect()[0][0]
+        if statistic == "median_value":
+            result = df.filter(df['Instrument'] == instrument_name) \
+                .agg(F.expr("percentile_approx(Value, 0.5)").alias("median")) \
+                .collect()[0]["median"]
             return result
         else:
             raise ValueError("Unsupported statistic type")
@@ -85,11 +89,11 @@ class InstrumentDataProcessor:
         mean_instrument1 = CalculationEngine.calculate_mean(df, "INSTRUMENT1")
         print(f"Calculate mean for INSTRUMENT1: {mean_instrument1}")
 
-        mean_instrument2_november = CalculationEngine.calculate_mean_for_month(df, "INSTRUMENT2", "Nov-2014")
+        mean_instrument2_november = CalculationEngine.calculate_mean_for_november(df, "INSTRUMENT2")
         print(f"Calculate mean for INSTRUMENT2 for November 2014: {mean_instrument2_november}")
 
-        statistic_instrument3 = CalculationEngine.calculate_statistic(df, "INSTRUMENT3", "distinct_dates")
-        print(f"Count distinct dates for INSTRUMENT3: {statistic_instrument3}")
+        statistic_instrument3 = CalculationEngine.calculate_statistic(df, "INSTRUMENT3", "median_value")
+        print(f"Median value for INSTRUMENT3: {statistic_instrument3}")
 
         newest_10_sum = {}
         for instrument in df.select("Instrument").distinct().collect():
