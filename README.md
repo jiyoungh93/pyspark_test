@@ -90,7 +90,7 @@ This script processes instrument data from an input file using PySpark and appli
 python instrument_data_processor.py
 ```
 
-## Example
+## Output Example
 
 ```bash
 Calculate mean for INSTRUMENT1: 3.3675917318899224
